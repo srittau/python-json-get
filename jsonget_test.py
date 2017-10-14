@@ -3,18 +3,19 @@ from unittest import TestCase
 from asserts import assert_raises, assert_succeeds, assert_equal, \
     assert_raises_regex
 
+from jsonget import JsonValue
 from jsonget import assert_json_type, json_get
 
 
 class AssertJsonTypeTest(TestCase):
 
-    def test_str(self):
+    def test_str(self) -> None:
         with assert_succeeds(TypeError):
             assert_json_type("abc", str)
         with assert_raises(TypeError):
             assert_json_type(45, str)
 
-    def test_int(self):
+    def test_int(self) -> None:
         with assert_succeeds(TypeError):
             assert_json_type(45, int)
         with assert_raises(TypeError):
@@ -22,7 +23,7 @@ class AssertJsonTypeTest(TestCase):
         with assert_raises(TypeError):
             assert_json_type(45.3, int)
 
-    def test_float(self):
+    def test_float(self) -> None:
         with assert_succeeds(TypeError):
             assert_json_type(45.3, float)
         with assert_succeeds(TypeError):
@@ -30,25 +31,25 @@ class AssertJsonTypeTest(TestCase):
         with assert_raises(TypeError):
             assert_json_type("45.3", float)
 
-    def test_bool(self):
+    def test_bool(self) -> None:
         with assert_succeeds(TypeError):
             assert_json_type(True, bool)
         with assert_raises(TypeError):
             assert_json_type(0, bool)
 
-    def test_list(self):
+    def test_list(self) -> None:
         with assert_succeeds(TypeError):
             assert_json_type(["foo", "bar"], list)
         with assert_raises(TypeError):
             assert_json_type(0, list)
 
-    def test_dict(self):
+    def test_dict(self) -> None:
         with assert_succeeds(TypeError):
             assert_json_type({"foo": "bar"}, dict)
         with assert_raises(TypeError):
             assert_json_type(0, dict)
 
-    def test_null(self):
+    def test_null(self) -> None:
         with assert_succeeds(TypeError):
             assert_json_type(None, None)
         with assert_raises(TypeError):
@@ -57,7 +58,7 @@ class AssertJsonTypeTest(TestCase):
 
 class JsonGetTest(TestCase):
 
-    def test_empty_path_elements(self):
+    def test_empty_path_elements(self) -> None:
         with assert_raises(ValueError):
             json_get({}, "/foo")
         with assert_raises(ValueError):
@@ -67,90 +68,90 @@ class JsonGetTest(TestCase):
         with assert_raises(ValueError):
             json_get([{"foo": 1}], "[0]foo")
 
-    def test_empty_path(self):
+    def test_empty_path(self) -> None:
         j = {"foo": "bar"}
         assert_equal(j, json_get(j, ""))
 
-    def test_slash_only(self):
+    def test_slash_only(self) -> None:
         j = {"foo": "bar"}
         assert_equal(j, json_get(j, "/"))
 
-    def test_ignore_leading_slash(self):
+    def test_ignore_leading_slash(self) -> None:
         j = {"foo": 44}
         assert_equal(44, json_get(j, "/foo"))
 
-    def test_sub_path(self):
+    def test_sub_path(self) -> None:
         j = {"foo": {"bar": 44}}
         assert_equal(44, json_get(j, "foo/bar"))
 
-    def test_sub_path_missing(self):
+    def test_sub_path_missing(self) -> None:
         j = {"foo": {"bar": 44}}
         with assert_raises(ValueError):
             json_get(j, "foo/baz")
 
-    def test_string_is_not_a_sub_path(self):
+    def test_string_is_not_a_sub_path(self) -> None:
         j = {"foo": "abc"}
         with assert_raises_regex(
                 TypeError, "JSON path '/foo' is not an object"):
             json_get(j, "foo/bar/baz")
 
-    def test_int_is_not_a_sub_path(self):
+    def test_int_is_not_a_sub_path(self) -> None:
         j = {"foo": {"num": 3.4}}
         with assert_raises_regex(
                 TypeError, "JSON path '/foo/num' is not an object"):
             json_get(j, "/foo/num/bar")
 
-    def test_correct_type(self):
+    def test_correct_type(self) -> None:
         j = {"foo": 44}
         json_get(j, "foo", int)
 
-    def test_wrong_type(self):
+    def test_wrong_type(self) -> None:
         j = {"foo": 44}
         with assert_raises(TypeError):
             json_get(j, "foo", str)
 
-    def test_root_array(self):
+    def test_root_array(self) -> None:
         j = ["a", "b", "c"]
         assert_equal("b", json_get(j, "[1]"))
 
-    def test_array_in_object(self):
+    def test_array_in_object(self) -> None:
         j = {"foo": ["a", "b", "c"]}
         assert_equal("b", json_get(j, "foo[1]"))
 
-    def test_nested_arrays(self):
+    def test_nested_arrays(self) -> None:
         j = [["a0", "b0"], ["a1", "b1"], ["a2", "b2"]]
         assert_equal("a1", json_get(j, "[1][0]"))
 
-    def test_mixed_objects_and_arrays(self):
+    def test_mixed_objects_and_arrays(self) -> None:
         j = [{}, {"foo": ["a", "b", "c"]}]
         assert_equal("c", json_get(j, "[1]/foo[2]"))
 
-    def test_int_not_an_array(self):
+    def test_int_not_an_array(self) -> None:
         j = {"foo": 42}
         with assert_raises_regex(
                 TypeError, "JSON path '/foo' is not an array"):
             json_get(j, "foo[0]")
 
-    def test_string_not_an_array(self):
+    def test_string_not_an_array(self) -> None:
         j = {"foo": "bar"}
         with assert_raises_regex(
                 TypeError, "JSON path '/foo' is not an array"):
             json_get(j, "foo[0]")
 
-    def test_object_not_an_array(self):
-        j = {"foo": {}}
+    def test_object_not_an_array(self) -> None:
+        j = {"foo": {}}  # type: JsonValue
         with assert_raises_regex(
                 TypeError, "JSON path '/foo' is not an array"):
             json_get(j, "foo[0]")
 
-    def test_array_out_of_bound(self):
+    def test_array_out_of_bound(self) -> None:
         j = {"foo": [1, 2, 3]}
         expected_message = r"JSON array '/foo' too small \(3 <= 4\)"
         with assert_raises_regex(IndexError, expected_message):
             json_get(j, "foo[4]")
 
-    def test_error_path(self):
-        j = {"foo": [None, {"bar": []}]}
+    def test_error_path(self) -> None:
+        j = {"foo": [None, {"bar": []}]}  # type: JsonValue
         expected_message = r"JSON array '/foo\[1\]/bar' too small \(0 <= 0\)"
         with assert_raises_regex(IndexError, expected_message):
             json_get(j, "foo[1]/bar[0]")
