@@ -1,4 +1,4 @@
-from unittest.case import TestCase
+from unittest import TestCase
 
 from asserts import assert_raises, assert_succeeds, assert_equal, \
     assert_raises_regex
