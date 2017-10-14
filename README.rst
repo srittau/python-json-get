@@ -1,6 +1,11 @@
 Python JSON Get
 ===============
 
+.. image:: https://img.shields.io/github/release/srittau/python-json-get/all.svg
+   :target: https://github.com/srittau/python-json-get/releases/
+.. image:: https://travis-ci.org/srittau/python-json-get.svg?branch=master
+   :target: https://travis-ci.org/srittau/python-json-get
+
 Get values from JSON objects usings a path expression. Optional type
 checking is possible.
 
