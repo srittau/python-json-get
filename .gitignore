@@ -1,4 +1,5 @@
 dist
 .idea
+.mypy_cache
 
 *.egg-info
