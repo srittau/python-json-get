@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name="json-get",
-    version="1.0.1",
+    version="1.0.2",
     description="Get values from JSON objects using a path expression",
     long_description=read("README.rst"),
     author="Sebastian Rittau",
