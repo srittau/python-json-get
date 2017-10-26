@@ -3,4 +3,6 @@ python:
   - "3.5"
   - "3.6"
 install: pip install -r requirements.txt
-script: python -m unittest jsonget_test.py
+script:
+  - python -m unittest jsonget_test.py
+  - mypy jsonget.py jsonget_test.py --ignore-missing-imports
