@@ -39,7 +39,7 @@ def assert_json_type(value: JsonValue, expected_type: JsonType) -> None:
         type_name(expected_type), type_name(type(value))))
 
 
-def _parse_json_path(path):
+def _parse_json_path(path: str) -> JsonPath:
     index_re = re.compile(r"\[(\d+)\]")
     full_index_re = re.compile(r"^(\[\d+\])+$")
     element_re = re.compile(r"^(.+?)(\[\d+\])*$")
@@ -49,7 +49,7 @@ def _parse_json_path(path):
         if not m:
             raise ValueError("invalid JSON path '{}'".format(path))
         indexes = parse_indexes(m.group(2)) if m.group(2) else []
-        return [m.group(1)] + indexes
+        return cast(JsonPath, [m.group(1)]) + indexes
 
     def parse_indexes(s: str) -> JsonPath:
         return [int(i) for i in index_re.findall(s)]
@@ -141,6 +141,7 @@ def json_get(json: JsonValue, path: str,
             if element not in current:
                 raise ValueError("JSON path '{}' not found".format(path))
             current_path += "/" + element
+            current = current[element]
         else:
             if not isinstance(current, list):
                 msg = "JSON path '{}' is not an array".format(current_path)
@@ -150,7 +151,7 @@ def json_get(json: JsonValue, path: str,
                     current_path, len(current), element)
                 raise IndexError(msg)
             current_path += "[{}]".format(i)
-        current = current[element]
+            current = current[element]
     if expected_type != ANY:
         assert_json_type(current, cast(JsonType, expected_type))
     return current
