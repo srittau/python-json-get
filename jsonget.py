@@ -19,7 +19,7 @@ def assert_json_type(value: JsonValue, expected_type: JsonType) -> None:
     fractional part.
     """
 
-    def type_name(t: JsonType) -> str:
+    def type_name(t: Union[JsonType, Type[None]]) -> str:
         if t is None:
             return "None"
         return t.__name__
