@@ -55,6 +55,14 @@ class AssertJsonTypeTest(TestCase):
         with assert_raises(TypeError):
             assert_json_type(0, None)
 
+    def test_expected_null_exception_message(self) -> None:
+        with assert_raises_regex(TypeError, "wrong JSON type None != str"):
+            assert_json_type("", None)
+
+    def test_did_not_expect_null_exception_message(self) -> None:
+        with assert_raises_regex(TypeError, "wrong JSON type str != None"):
+            assert_json_type(None, str)
+
 
 class JsonGetTest(TestCase):
 
