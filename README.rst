@@ -1,8 +1,12 @@
 Python JSON Get
 ===============
 
+.. image:: https://img.shields.io/pypi/l/json-get.svg
+   :target: https://pypi.python.org/pypi/json-get/
 .. image:: https://img.shields.io/github/release/srittau/python-json-get/all.svg
    :target: https://github.com/srittau/python-json-get/releases/
+.. image:: https://img.shields.io/pypi/v/json-get.svg
+   :target: https://pypi.python.org/pypi/json-get/
 .. image:: https://travis-ci.org/srittau/python-json-get.svg?branch=master
    :target: https://travis-ci.org/srittau/python-json-get
 
