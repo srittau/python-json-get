@@ -3,7 +3,7 @@ from unittest import TestCase
 from asserts import assert_raises, assert_succeeds, assert_equal, \
     assert_raises_regex
 
-from jsonget import JsonValue
+from jsonget import JsonValue, json_get_default
 from jsonget import assert_json_type, json_get
 
 
@@ -161,3 +161,27 @@ class JsonGetTest(TestCase):
         expected_message = r"JSON array '/foo\[1\]/bar' too small \(0 <= 0\)"
         with assert_raises_regex(IndexError, expected_message):
             json_get(j, "foo[1]/bar[0]")
+
+
+class JsonGetDefaultTest(TestCase):
+    def test_path_exists(self) -> None:
+        j = {"foo": {"bar": 123}}
+        v = json_get_default(j, "/foo/bar", None)
+        assert_equal(123, v)
+
+    def test_path_does_not_exist(self) -> None:
+        j = {"baz": 0}
+        v = json_get_default(j, "/foo/bar", "default value")
+        assert_equal("default value", v)
+
+    def test_index_does_not_exist(self) -> None:
+        j = {
+            "foo": [1, 2, 3],
+        }
+        v = json_get_default(j, "/foo[10]", 42)
+        assert_equal(42, v)
+
+    def test_type_does_not_match(self) -> None:
+        j = {"foo": "bar"}
+        with assert_raises(TypeError):
+            json_get_default(j, "/foo", None, int)

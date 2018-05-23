@@ -1,6 +1,11 @@
 News in json-get 1.1.0
 ======================
 
+API Additions
+-------------
+
+* Add ``json_get_default()``.
+
 Improvements
 ------------
 

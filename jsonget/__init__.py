@@ -1,11 +1,13 @@
 import re
-from typing import Union, Type, List, cast
+from typing import Union, Type, List, TypeVar, cast
 
 JsonType = Union[Type[str], Type[int], Type[float], Type[bool], Type[list],
                  Type[dict], None]
 JsonValue = Union[str, int, float, bool, list, dict, None]
 JsonPathElement = Union[str, int]
 JsonPath = List[JsonPathElement]
+
+_T = TypeVar("_T")
 
 
 def assert_json_type(value: JsonValue, expected_type: JsonType) -> None:
@@ -155,3 +157,30 @@ def json_get(json: JsonValue,
     if expected_type != ANY:
         assert_json_type(current, cast(JsonType, expected_type))
     return current
+
+
+def json_get_default(json: JsonValue, path: str,
+                     default: _T,
+                     expected_type: Union[JsonType, str] = ANY) \
+        -> Union[JsonValue, _T]:
+    """Get a JSON value by path, optionally checking its type.
+
+    This works exactly like json_get(), but instead of raising
+    ValueError or IndexError when a path part is not found, return
+    the provided default value:
+
+    >>> json_get_default({}, "/foo", "I am a default value")
+    'I am a default value'
+
+    TypeErrors will be raised as in json_get() if an expected_type
+    is provided:
+
+    >>> json_get_default({"foo": "bar"}, "/foo", 123, int)
+    Traceback (most recent call last):
+        ...
+    TypeError: wrong JSON type int != str
+    """
+    try:
+        return json_get(json, path, expected_type)
+    except (ValueError, IndexError):
+        return default
