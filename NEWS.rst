@@ -1,6 +1,11 @@
 News in json-get 1.1.0
 ======================
 
+Other Changes
+-------------
+
+* Convert ``jsonget`` into a package.
+
 News in json-get 1.0.1
 ======================
 
