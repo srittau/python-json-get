@@ -1,9 +1,8 @@
 import re
 from typing import Union, Type, List, cast
 
-JsonType = Union[
-    Type[str], Type[int], Type[float], Type[bool], Type[list], Type[dict], None
-]
+JsonType = Union[Type[str], Type[int], Type[float], Type[bool], Type[list],
+                 Type[dict], None]
 JsonValue = Union[str, int, float, bool, list, dict, None]
 JsonPathElement = Union[str, int]
 JsonPath = List[JsonPathElement]
@@ -72,61 +71,62 @@ def _parse_json_path(path: str) -> JsonPath:
 ANY = "any"
 
 
-def json_get(json: JsonValue, path: str,
+def json_get(json: JsonValue,
+             path: str,
              expected_type: Union[JsonType, str] = ANY) -> JsonValue:
     """Get a JSON value by path, optionally checking its type.
 
-        >>> j = {"foo": {"num": 3.4, "s": "Text"}, "arr": [10, 20, 30]}
-        >>> json_get(j, "/foo/num")
-        3.4
-        >>> json_get(j, "/arr[1]")
-        20
+    >>> j = {"foo": {"num": 3.4, "s": "Text"}, "arr": [10, 20, 30]}
+    >>> json_get(j, "/foo/num")
+    3.4
+    >>> json_get(j, "/arr[1]")
+    20
 
     Raise ValueError if the path is not found:
 
-        >>> json_get(j, "/foo/unknown")
-        Traceback (most recent call last):
-            ...
-        ValueError: JSON path '/foo/unknown' not found
+    >>> json_get(j, "/foo/unknown")
+    Traceback (most recent call last):
+        ...
+    ValueError: JSON path '/foo/unknown' not found
 
     Raise TypeError if the path contains a non-object element:
 
-        >>> json_get(j, "/foo/num/bar")
-        Traceback (most recent call last):
-            ...
-        TypeError: JSON path '/foo/num' is not an object
+    >>> json_get(j, "/foo/num/bar")
+    Traceback (most recent call last):
+        ...
+    TypeError: JSON path '/foo/num' is not an object
 
     Or a non-array element:
 
-        >>> json_get(j, "/foo[2]")
-        Traceback (most recent call last):
-            ...
-        TypeError: JSON path '/foo' is not an array
+    >>> json_get(j, "/foo[2]")
+    Traceback (most recent call last):
+        ...
+    TypeError: JSON path '/foo' is not an array
 
     Raise an IndexError if the array index is out of bounds:
 
-        >>> json_get(j, "/arr[10]")
-        Traceback (most recent call last):
-            ...
-        IndexError: JSON array '/arr' too small (3 <= 10)
+    >>> json_get(j, "/arr[10]")
+    Traceback (most recent call last):
+        ...
+    IndexError: JSON array '/arr' too small (3 <= 10)
 
     Recognized types are: str, int, float, bool, list, dict, and None.
     TypeError is raised if the type does not match.
 
-        >>> json_get(j, "/foo/num", str)
-        Traceback (most recent call last):
-            ...
-        TypeError: wrong JSON type str != float
+    >>> json_get(j, "/foo/num", str)
+    Traceback (most recent call last):
+        ...
+    TypeError: wrong JSON type str != float
 
     float will match any number, int will only match numbers without a
     fractional part.
 
-        >>> json_get(j, "/foo/num", float)
-        3.4
-        >>> json_get(j, "/foo/num", int)
-        Traceback (most recent call last):
-            ...
-        TypeError: wrong JSON type int != float
+    >>> json_get(j, "/foo/num", float)
+    3.4
+    >>> json_get(j, "/foo/num", int)
+    Traceback (most recent call last):
+        ...
+    TypeError: wrong JSON type int != float
     """
 
     elements = _parse_json_path(path)
