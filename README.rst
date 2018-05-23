@@ -13,7 +13,7 @@ Python JSON Get
 Get values from JSON objects usings a path expression. Optional type
 checking is possible::
 
->>> from jsonget import json_get, json_get_default
+>>> from jsonget import json_get, json_get_default, JList
 >>> j = {
 ...     "foo": {"num": 3.4, "s": "Text"},
 ...     "arr": [10, 20, 30],
@@ -45,6 +45,11 @@ a fractional part::
 Traceback (most recent call last):
     ...
 TypeError: wrong JSON type int != float
+
+Additionally, the type of list values can be checked::
+
+>>> json_get(j, "/arr", JList(int))
+[10, 20, 30]
 
 ``json_get_default()`` can be used to return a default value if a given
 path does not exist::

@@ -3,6 +3,7 @@ from typing import Union, Type, List, TypeVar, cast
 
 JsonType = Union[Type[str], Type[int], Type[float], Type[bool], Type[list],
                  Type[dict], None]
+JsonCheckType = Union[JsonType, "JList"]
 JsonValue = Union[str, int, float, bool, list, dict, None]
 JsonPathElement = Union[str, int]
 JsonPath = List[JsonPathElement]
@@ -10,7 +11,12 @@ JsonPath = List[JsonPathElement]
 _T = TypeVar("_T")
 
 
-def assert_json_type(value: JsonValue, expected_type: JsonType) -> None:
+class JList:
+    def __init__(self, value_type: JsonCheckType) -> None:
+        self.value_type = value_type
+
+
+def assert_json_type(value: JsonValue, expected_type: JsonCheckType) -> None:
     """Check that a value has a certain JSON type.
 
     Raise TypeError if the type does not match.
@@ -18,11 +24,18 @@ def assert_json_type(value: JsonValue, expected_type: JsonType) -> None:
     Supported types: str, int, float, bool, list, dict, and None.
     float will match any number, int will only match numbers without
     fractional part.
+
+    The special type JList(x) will match a list value where each
+    item is of type x:
+
+    >>> assert_json_type([1, 2, 3], JList(int))
     """
 
-    def type_name(t: Union[JsonType, Type[None]]) -> str:
+    def type_name(t: Union[JsonCheckType, Type[None]]) -> str:
         if t is None:
             return "None"
+        if isinstance(t, JList):
+            return "list"
         return t.__name__
 
     if expected_type is None:
@@ -32,7 +45,12 @@ def assert_json_type(value: JsonValue, expected_type: JsonType) -> None:
         if isinstance(value, float) or isinstance(value, int):
             return
     elif expected_type in [str, int, bool, list, dict]:
-        if isinstance(value, expected_type):
+        if isinstance(value, expected_type):  # type: ignore
+            return
+    elif isinstance(expected_type, JList):
+        if isinstance(value, list):
+            for v in value:
+                assert_json_type(v, expected_type.value_type)
             return
     else:
         raise TypeError("unsupported type")
@@ -75,7 +93,7 @@ ANY = "any"
 
 def json_get(json: JsonValue,
              path: str,
-             expected_type: Union[JsonType, str] = ANY) -> JsonValue:
+             expected_type: Union[JsonCheckType, str] = ANY) -> JsonValue:
     """Get a JSON value by path, optionally checking its type.
 
     >>> j = {"foo": {"num": 3.4, "s": "Text"}, "arr": [10, 20, 30]}
@@ -161,7 +179,7 @@ def json_get(json: JsonValue,
 
 def json_get_default(json: JsonValue, path: str,
                      default: _T,
-                     expected_type: Union[JsonType, str] = ANY) \
+                     expected_type: Union[JsonCheckType, str] = ANY) \
         -> Union[JsonValue, _T]:
     """Get a JSON value by path, optionally checking its type.
 

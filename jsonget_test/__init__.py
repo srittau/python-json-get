@@ -3,7 +3,7 @@ from unittest import TestCase
 from asserts import assert_raises, assert_succeeds, assert_equal, \
     assert_raises_regex
 
-from jsonget import JsonValue, json_get_default
+from jsonget import JsonValue, json_get_default, JList
 from jsonget import assert_json_type, json_get
 
 
@@ -61,6 +61,27 @@ class AssertJsonTypeTest(TestCase):
     def test_did_not_expect_null_exception_message(self) -> None:
         with assert_raises_regex(TypeError, "wrong JSON type str != None"):
             assert_json_type(None, str)
+
+    def test_jlist__empty_list(self) -> None:
+        assert_json_type([], JList(int))
+
+    def test_jlist__all_match(self) -> None:
+        assert_json_type([1, 2, 3], JList(int))
+
+    def test_jlist__nested(self) -> None:
+        assert_json_type([[1, 2, 3], [], [4]], JList(JList(int)))
+
+    def test_jlist__not_a_list(self) -> None:
+        with assert_raises_regex(TypeError, "wrong JSON type list != str"):
+            assert_json_type("foo", JList(str))
+
+    def test_jlist__no_match(self) -> None:
+        with assert_raises_regex(TypeError, "wrong JSON type int != str"):
+            assert_json_type(["foo", "bar"], JList(int))
+
+    def test_jlist__any_does_not_match(self) -> None:
+        with assert_raises_regex(TypeError, "wrong JSON type int != str"):
+            assert_json_type([45, "bar"], JList(int))
 
 
 class JsonGetTest(TestCase):

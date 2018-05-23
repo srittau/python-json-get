@@ -5,6 +5,7 @@ API Additions
 -------------
 
 * Add ``json_get_default()``.
+* Add class JList and JsonCheckType to type check lists and their items.
 
 Improvements
 ------------
