@@ -17,6 +17,7 @@ setup(
     author_email="srittau@rittau.biz",
     url="https://github.com/srittau/python-json-get",
     packages=["jsonget", "jsonget_test"],
+    package_data={"jsonget": ["py.typed"]},
     python_requires=">=3.5",
     tests_require=["asserts>=0.6, <0.8"],
     license="MIT",
