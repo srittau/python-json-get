@@ -8,7 +8,6 @@ from jsonget import assert_json_type, json_get
 
 
 class AssertJsonTypeTest(TestCase):
-
     def test_str(self) -> None:
         with assert_succeeds(TypeError):
             assert_json_type("abc", str)
@@ -65,7 +64,6 @@ class AssertJsonTypeTest(TestCase):
 
 
 class JsonGetTest(TestCase):
-
     def test_empty_path_elements(self) -> None:
         with assert_raises(ValueError):
             json_get({}, "/foo")
@@ -99,14 +97,14 @@ class JsonGetTest(TestCase):
 
     def test_string_is_not_a_sub_path(self) -> None:
         j = {"foo": "abc"}
-        with assert_raises_regex(
-                TypeError, "JSON path '/foo' is not an object"):
+        with assert_raises_regex(TypeError,
+                                 "JSON path '/foo' is not an object"):
             json_get(j, "foo/bar/baz")
 
     def test_int_is_not_a_sub_path(self) -> None:
         j = {"foo": {"num": 3.4}}
-        with assert_raises_regex(
-                TypeError, "JSON path '/foo/num' is not an object"):
+        with assert_raises_regex(TypeError,
+                                 "JSON path '/foo/num' is not an object"):
             json_get(j, "/foo/num/bar")
 
     def test_correct_type(self) -> None:
@@ -136,20 +134,20 @@ class JsonGetTest(TestCase):
 
     def test_int_not_an_array(self) -> None:
         j = {"foo": 42}
-        with assert_raises_regex(
-                TypeError, "JSON path '/foo' is not an array"):
+        with assert_raises_regex(TypeError,
+                                 "JSON path '/foo' is not an array"):
             json_get(j, "foo[0]")
 
     def test_string_not_an_array(self) -> None:
         j = {"foo": "bar"}
-        with assert_raises_regex(
-                TypeError, "JSON path '/foo' is not an array"):
+        with assert_raises_regex(TypeError,
+                                 "JSON path '/foo' is not an array"):
             json_get(j, "foo[0]")
 
     def test_object_not_an_array(self) -> None:
         j = {"foo": {}}  # type: JsonValue
-        with assert_raises_regex(
-                TypeError, "JSON path '/foo' is not an array"):
+        with assert_raises_regex(TypeError,
+                                 "JSON path '/foo' is not an array"):
             json_get(j, "foo[0]")
 
     def test_array_out_of_bound(self) -> None:
