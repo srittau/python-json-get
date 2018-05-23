@@ -1,4 +1,4 @@
-News in json-get 1.0.2
+News in json-get 1.1.0
 ======================
 
 News in json-get 1.0.1
