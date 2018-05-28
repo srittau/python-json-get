@@ -137,6 +137,11 @@ class JsonGetTest(TestCase):
         with assert_raises(TypeError):
             json_get(j, "foo", str)
 
+    def test_wrong_bool(self) -> None:
+        j = {"foo": 44}
+        with assert_raises(TypeError):
+            json_get(j, "foo", bool)
+
     def test_root_array(self) -> None:
         j = ["a", "b", "c"]
         assert_equal("b", json_get(j, "[1]"))

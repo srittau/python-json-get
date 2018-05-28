@@ -1,5 +1,6 @@
 import re
-from typing import Union, Type, List, TypeVar, cast
+from typing import \
+    Any, Union, Type, List, Dict, Optional, TypeVar, cast, overload
 
 JsonType = Union[Type[str], Type[int], Type[float], Type[bool], Type[list],
                  Type[dict], None]
@@ -8,7 +9,7 @@ JsonValue = Union[str, int, float, bool, list, dict, None]
 JsonPathElement = Union[str, int]
 JsonPath = List[JsonPathElement]
 
-_T = TypeVar("_T")
+_JT = TypeVar("_JT", str, int, float, bool)
 
 
 class JList:
@@ -91,9 +92,45 @@ def _parse_json_path(path: str) -> JsonPath:
 ANY = "any"
 
 
-def json_get(json: JsonValue,
-             path: str,
-             expected_type: Union[JsonCheckType, str] = ANY) -> JsonValue:
+@overload
+def json_get(json: JsonValue, path: str, expected_type: None) -> None:
+    ...
+
+
+# https://github.com/python/mypy/issues/5116
+@overload
+def json_get(json: JsonValue, path: str, expected_type: Type[bool]) -> bool:
+    ...
+
+
+@overload
+def json_get(json: JsonValue, path: str, expected_type: Type[_JT]) -> _JT:
+    ...
+
+
+@overload
+def json_get(json: JsonValue, path: str,
+             expected_type: Type[list]) -> List[Any]:
+    ...
+
+
+@overload
+def json_get(json: JsonValue, path: str,
+             expected_type: Type[dict]) -> Dict[str, Any]:
+    ...
+
+
+@overload
+def json_get(json: JsonValue, path: str, expected_type: JList) -> List[Any]:
+    ...
+
+
+@overload
+def json_get(json: JsonValue, path: str, expected_type: str = ANY) -> Any:
+    ...
+
+
+def json_get(json: JsonValue, path: str, expected_type: Any = ANY) -> Any:
     """Get a JSON value by path, optionally checking its type.
 
     >>> j = {"foo": {"num": 3.4, "s": "Text"}, "arr": [10, 20, 30]}
@@ -177,10 +214,86 @@ def json_get(json: JsonValue,
     return current
 
 
+@overload
 def json_get_default(json: JsonValue, path: str,
-                     default: _T,
-                     expected_type: Union[JsonCheckType, str] = ANY) \
-        -> Union[JsonValue, _T]:
+                     default: None, expected_type: None) -> None:
+    ...
+
+
+# https://github.com/python/mypy/issues/5116
+@overload
+def json_get_default(json: JsonValue, path: str, default: bool,
+                     expected_type: Type[bool]) -> bool:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str, default: None,
+                     expected_type: Type[bool]) -> Optional[bool]:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str, default: _JT,
+                     expected_type: Type[_JT]) -> _JT:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str, default: None,
+                     expected_type: Type[_JT]) -> Optional[_JT]:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str,
+                     default: List[Any], expected_type: Type[list]) \
+        -> List[Any]:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str,
+                     default: None, expected_type: Type[list]) \
+        -> Optional[List[Any]]:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str,
+                     default: Dict[str, Any], expected_type: Type[dict]) \
+        -> Dict[str, Any]:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str,
+                     default: None, expected_type: Type[dict]) \
+        -> Optional[Dict[str, Any]]:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str,
+                     default: List[Any], expected_type: JList) -> List[Any]:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str,
+                     default: None, expected_type: JList) \
+        -> Optional[List[Any]]:
+    ...
+
+
+@overload
+def json_get_default(json: JsonValue, path: str,
+                     default: Any, expected_type: str = ANY) -> Any:
+    ...
+
+
+def json_get_default(json: JsonValue, path: str,
+                     default: Any, expected_type: Any = ANY) -> Any:
     """Get a JSON value by path, optionally checking its type.
 
     This works exactly like json_get(), but instead of raising

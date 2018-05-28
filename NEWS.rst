@@ -1,6 +1,11 @@
 News in json-get 1.1.1
 ======================
 
+Improvements
+------------
+
+* Improve public type hints.
+
 News in json-get 1.1.0
 ======================
 
