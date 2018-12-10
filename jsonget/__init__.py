@@ -97,12 +97,6 @@ def json_get(json: JsonValue, path: str, expected_type: None) -> None:
     ...
 
 
-# https://github.com/python/mypy/issues/5116
-@overload
-def json_get(json: JsonValue, path: str, expected_type: Type[bool]) -> bool:
-    ...
-
-
 @overload
 def json_get(json: JsonValue, path: str, expected_type: Type[_JT]) -> _JT:
     ...
@@ -217,13 +211,6 @@ def json_get(json: JsonValue, path: str, expected_type: Any = ANY) -> Any:
 @overload
 def json_get_default(json: JsonValue, path: str,
                      default: None, expected_type: None) -> None:
-    ...
-
-
-# https://github.com/python/mypy/issues/5116
-@overload
-def json_get_default(json: JsonValue, path: str, default: bool,
-                     expected_type: Type[bool]) -> bool:
     ...
 
 
