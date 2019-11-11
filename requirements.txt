@@ -1,3 +1,7 @@
 asserts==0.10.0
-mypy==0.650
+mypy==0.740
 wheel==0.33.6
+
+# Transitive dependencies
+
+typed-ast==1.4.0
