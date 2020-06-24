@@ -1,5 +1,5 @@
 asserts==0.10.0
-mypy==0.781
+mypy==0.782
 wheel==0.34.2
 
 # Transitive dependencies
