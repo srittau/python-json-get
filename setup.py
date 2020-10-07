@@ -19,7 +19,7 @@ setup(
     packages=["jsonget", "jsonget_test"],
     package_data={"jsonget": ["py.typed"]},
     python_requires=">=3.5",
-    tests_require=["asserts>=0.6, <0.11"],
+    tests_require=["asserts>=0.6, <0.12"],
     license="MIT",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
