@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name="json-get",
-    version="1.1.1",
+    version="2.0.0",
     description="Get values from JSON objects using a path expression",
     long_description=read("README.rst"),
     author="Sebastian Rittau",
@@ -18,7 +18,7 @@ setup(
     url="https://github.com/srittau/python-json-get",
     packages=["jsonget", "jsonget_test"],
     package_data={"jsonget": ["py.typed"]},
-    python_requires=">=3.5",
+    python_requires=">=3.7",
     tests_require=["asserts>=0.6, <0.12"],
     license="MIT",
     classifiers=[
@@ -26,8 +26,6 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
