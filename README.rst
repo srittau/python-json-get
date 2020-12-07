@@ -7,8 +7,8 @@ Python JSON Get
    :target: https://github.com/srittau/python-json-get/releases/
 .. image:: https://img.shields.io/pypi/v/json-get.svg
    :target: https://pypi.python.org/pypi/json-get/
-.. image:: https://travis-ci.org/srittau/python-json-get.svg?branch=master
-   :target: https://travis-ci.org/srittau/python-json-get
+.. image:: https://img.shields.io/github/workflow/status/srittau/python-json-get/test-and-lint
+   :target: https://github.com/srittau/python-json-get/actions
 
 Get values from JSON objects usings a path expression. Optional type
 checking is possible:
