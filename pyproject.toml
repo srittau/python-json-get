@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "json-get"
+version = "2.0.0"
+description = "Get values from JSON objects using a path expression"
+readme = "README.rst"
+authors = ["Sebastian Rittau <srittau@rittau.biz>"]
+license = "MIT"
+homepage = "https://github.com/srittau/python-json-get"
+repository = "https://github.com/srittau/python-json-get"
+classifiers =[
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+]
+packages = [{ include = "jsonget" }, { include = "jsonget_test" }]
+include = ["*/py.typed"]
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+
+[tool.poetry.dev-dependencies]
+asserts = ">= 0.6, <0.12"
+mypy = "0.931"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
