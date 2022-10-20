@@ -19,7 +19,7 @@ include = ["*/py.typed"]
 python = ">=3.7"
 
 [tool.poetry.dev-dependencies]
-asserts = ">= 0.6, <0.12"
+asserts = ">=0.6,<0.13"
 mypy = "0.982"
 
 [build-system]
